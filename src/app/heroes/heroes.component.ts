@@ -8,20 +8,29 @@ import { HeroService } from '../hero.service';
   styleUrls: ['./heroes.component.css']
 })
 export class HeroesComponent implements OnInit {
-  // why equal sign here and colon under?
-  // heroes = HEROES;
-
+  
   heroes: Hero[];
 
   getHeroes(): void {
     this.heroService.getHeroes()
-    // what happens to UI when it is waiting? How does this solve the problem?
         .subscribe(heroes => this.heroes = heroes);
   }
   selectedHero: Hero;
 
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+  }
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.heroService.addHero({ name } as Hero)
+      .subscribe(hero => {
+        this.heroes.push(hero);
+      });
+  }
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero).subscribe();
   }
   
   // why not just call it directly, why do we have to pass it as argument?
